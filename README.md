@@ -1,6 +1,6 @@
-# cryss
+# cRySS
 
-`cryss` is a light wrapper around `XML` for the W3 RSS 2.0 standard.
+`cRySS` is a light wrapper around `XML` for the W3 RSS 2.0 standard.
 
 ## Installation
 
