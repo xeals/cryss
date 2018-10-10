@@ -15,26 +15,6 @@
 require "./spec_helper"
 
 describe RSS do
-  ex_cloud = RSS::Cloud.new(
-    domain: "rpc.sys.com",
-    port: 80,
-    path: "/RPC2",
-    register_procedure: "pingMe",
-    protocol: "soap"
-  )
-
-  ex_enclosure = RSS::Enclosure.new(
-    url: "http://live.curry.com/mp3/celebritySCms.mp3",
-    length: 1069871,
-    type: "audio/mpeg"
-  )
-
-  base_channel = RSS::Channel.new(
-    link: "http://www.goupstate.com/",
-    title: "GoUpstate.com News Headlines",
-    description: "The latest news from GoUpstate.com, a Spartanburg Herald-Journal Web site."
-  )
-
   it "builds enclosure" do
     w3 = HEADER + ENCLOSURE_TEST
 
@@ -85,5 +65,23 @@ describe RSS do
     chan = base_channel
     chan.skip_days = [RSS::Day::Monday, RSS::Day::Wednesday]
     chan.skip_hours = [2, 6, 18, 22]
+
+    chan.to_s.strip.should eq SKIP_DAY_TEST
+  end
+
+  it "adds namespace" do
+    chan = base_channel
+    chan.add_ns(dc: "http://purl.org/dc/elements/1.1")
+    chan.ns("dc") do |dc|
+      dc["rights"] = "Copyright 2002"
+    end
+
+    item = RSS::Item.new(title: "New item")
+    item.ns("dc") do |dc|
+      dc["subject"] = "CSS"
+    end
+    chan << item
+
+    chan.to_s.strip.should eq NAMESPACE_TEST
   end
 end

@@ -71,6 +71,8 @@ module RSS
         emit width if @width
         emit height if @height
         emit description if @description
+
+        emit_custom xml
       end
     end
   end

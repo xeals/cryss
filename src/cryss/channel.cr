@@ -137,6 +137,8 @@ module RSS
     # Contained elements of the channel.
     getter items : Array(Item) = [] of Item
 
+    @namespaces = {} of String => String
+
     def initialize(link : URI | String, @title : String, @description : String)
       @link = link.is_a?(URI) ? link : URI.parse link
     end
@@ -149,9 +151,21 @@ module RSS
       push item
     end
 
+    def add_ns(name : String | Symbol,
+               url : URI | String)
+      @namespaces["xmlns:#{name.to_s}"] = url.to_s
+    end
+
+    def add_ns(**ns)
+      ns.each do |k, v|
+        add_ns(k, v)
+      end
+    end
+
     # Serialises the channel to the XML builder.
     def to_xml(xml : XML::Builder)
       xml.element("rss", version: "2.0") do
+        xml.attributes(@namespaces)
         xml.element("channel") do
           emit title
           emit link
@@ -196,6 +210,8 @@ module RSS
               end
             end
           end
+
+          emit_custom xml
 
           @items.each do |item|
             item.to_xml xml

@@ -15,6 +15,32 @@
 require "spec"
 require "../src/cryss"
 
+def ex_cloud
+  RSS::Cloud.new(
+    domain: "rpc.sys.com",
+    port: 80,
+    path: "/RPC2",
+    register_procedure: "pingMe",
+    protocol: "soap"
+  )
+end
+
+def ex_enclosure
+  RSS::Enclosure.new(
+    url: "http://live.curry.com/mp3/celebritySCms.mp3",
+    length: 1069871,
+    type: "audio/mpeg"
+  )
+end
+
+def base_channel
+  RSS::Channel.new(
+    link: "http://www.goupstate.com/",
+    title: "GoUpstate.com News Headlines",
+    description: "The latest news from GoUpstate.com, a Spartanburg Herald-Journal Web site."
+  )
+end
+
 HEADER = "<?xml version=\"1.0\"?>\n"
 
 CLOUD_TEST = "<cloud domain=\"rpc.sys.com\" port=\"80\" path=\"/RPC2\" registerProcedure=\"pingMe\" protocol=\"soap\"/>"
@@ -63,6 +89,8 @@ SKIP_DAY_TEST = HEADER + <<-XML
     <title>GoUpstate.com News Headlines</title>
     <link>http://www.goupstate.com/</link>
     <description>The latest news from GoUpstate.com, a Spartanburg Herald-Journal Web site.</description>
+    <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    <generator>cryss</generator>
     <skipHours>
       <hour>2</hour>
       <hour>6</hour>
@@ -73,6 +101,23 @@ SKIP_DAY_TEST = HEADER + <<-XML
       <day>Monday</day>
       <day>Wednesday</day>
     </skipDays>
+  </channel>
+</rss>
+XML
+
+NAMESPACE_TEST = HEADER + <<-XML
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1">
+  <channel>
+    <title>GoUpstate.com News Headlines</title>
+    <link>http://www.goupstate.com/</link>
+    <description>The latest news from GoUpstate.com, a Spartanburg Herald-Journal Web site.</description>
+    <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    <generator>cryss</generator>
+    <dc:rights>Copyright 2002</dc:rights>
+    <item>
+      <title>New item</title>
+      <dc:subject>CSS</dc:subject>
+    </item>
   </channel>
 </rss>
 XML

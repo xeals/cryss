@@ -135,6 +135,8 @@ module RSS
           xml.element("pubDate") { xml.text pub.to_rfc2822 }
         end
         xml.element("source", url: @source_url.to_s) { xml.text @source.to_s } if @source
+
+        emit_custom xml
       end
     end
   end
